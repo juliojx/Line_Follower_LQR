@@ -13,9 +13,13 @@ ___
 
 ## Hardware
 The first step is building the hardware, as I wanted to follow some rules from official contests in robotics, I designed a robot that could be contained in a 20cmx20cm square. Below, you can see the diagram of the project and components.
+![Alt text](images/circuit.png?raw=true "Title")
 
 
+## Simulation and obtaining the control constants
 
-## Example2
-## Third Example
+
+## Programming on Arduino
+
+
 ## FOur
