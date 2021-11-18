@@ -6,7 +6,7 @@ ___
 
 # Table of Contents
 1. [Hardware](#Hardware)
-2. [Example2](#example2)
+2. [Simulation and obtaining the control constants](#simulation)
 3. [Third Example](#third-example)
 4. [Fourth Example](#fourth-examplehttpwwwfourthexamplecom)
 
