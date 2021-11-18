@@ -17,6 +17,10 @@ The first step is building the hardware, as I wanted to follow some rules from o
 
 
 ## Simulation and obtaining the control constants
+As the sensors bar has to be centered as the robot goes forward on the line, we can consider the central sensors as a punctual mass in an unidimensional space under the effect of a varying time force. Therefore, we can use the double integrator model, whose equations are given by:
+
+
+
 
 
 ## Programming on Arduino
