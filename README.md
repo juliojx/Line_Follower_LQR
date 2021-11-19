@@ -25,6 +25,15 @@ Based on the Pontryagin principle we can solve a optimization problem (see http:
 
 ![Alt text](images/RicattiEquations.png?raw=true "Algebraic Riccati equation")
 
+![Alt text](images/RicattiEquationOutput.png?raw=true "Output of Algebraic Riccati equation")
+
+![Alt text](images/RicattiEquationConstant.png?raw=true "Definning the control constant")
+
+
+
+
+
+
 ## Programming on Arduino
 
 
