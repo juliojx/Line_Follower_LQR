@@ -33,7 +33,7 @@ and define the constant for the control by feedback
 
 ![Alt text](images/RicattiEquationConstant.png?raw=true "Definning the control constant")
 
-All details, explanations and definitions can be found in  http://www.cds.caltech.edu/~murray/books/AM08/pdf/obc09-obc09_03Mar09.pdf or any other classical control theory book.
+A comprehensive explanation of the theory can be found in  http://www.cds.caltech.edu/~murray/books/AM08/pdf/obc09-obc09_03Mar09.pdf or any other classical control theory book.
 
 
 
