@@ -22,6 +22,7 @@ As the sensors bar has to be centered as the robot goes forward on the line, we 
 ![Alt text](images/equationsDoubleInt.png?raw=true "Equations of a simple double integrator")
 
 Based on the Pontryagin principle we can solve a optimization problem (see http://www.cds.caltech.edu/~murray/books/AM08/pdf/obc09-obc09_03Mar09.pdf for a detailed explanation about the Pontryagin’s maximum principle) by solving the algebraic Riccati equation:
+
 ![Alt text](images/RicattiEquations.png?raw=true "Algebraic Riccati equation")
 
 ## Programming on Arduino
