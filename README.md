@@ -25,7 +25,11 @@ Based on the Pontryagin principle we can solve a optimization problem (see http:
 
 ![Alt text](images/RicattiEquations.png?raw=true "Algebraic Riccati equation")
 
+Given a solution, we can set the output as 
+
 ![Alt text](images/RicattiEquationOutput.png?raw=true "Output of Algebraic Riccati equation")
+
+and define the constant for the control by feedback
 
 ![Alt text](images/RicattiEquationConstant.png?raw=true "Definning the control constant")
 
