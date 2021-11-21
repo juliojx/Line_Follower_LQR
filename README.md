@@ -117,7 +117,7 @@ So, the implementation in Arduino (C/C++ language) is presented below:
 
 int VCC=7;
 int state=1;
-//Variables a utilizar para el botón pulsador
+//Variables for psuh button
 const int pulsador=2;
 int contadorBoton=0;
 int pulsos=0;
