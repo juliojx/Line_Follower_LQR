@@ -144,7 +144,7 @@ float Velocity;
 int InitialCounter=0;
 float TimeInSeconds;
 
-//************Aqui se configuran los motores***************************************************************
+//************motor configuration***************************************************************
 
 
 int STBY = 10; //standby
@@ -161,9 +161,9 @@ int BIN2 = 12; //Direction
 
 //*********************************************************************
 
-//***************Aqui se configuran los parametros del control LQR***************************************
+//***************LQR parameters***************************************
 
-float k[]={50.729833,0}; //Estos valores los obtenemos de la simulacion hecha en python
+float k[]={50.729833,0}; //The constant set by the Riccati Equations solution on Python
 
 float x[]={0,0};
 float u;
@@ -174,7 +174,7 @@ float u;
 
 
 
-void setup()
+void setup() //Settings for sensors inputs
 {
   Serial.begin(9600);
   pinMode(A0,INPUT);
@@ -204,76 +204,75 @@ void loop()
   if(Position>LastPosition)
   {
     if(Position<0)
-    {
-       Time_F=millis();
-   // Serial.print("Tiempo inicial "); Serial.print(Time_I);Serial.print("Tiempo final "); Serial.println(Time_F);
-    TimeInSeconds=(Time_F-Time_I)*0.001;
-    Velocity=0.0135/TimeInSeconds;
-    //Serial.println(Velocity);
-    Time_I=Time_F;
-    ReadPosition();
-    DetectPositionWhiteSurfaceMedium();
-    LastPosition=Position;
-    u=(k[0]*Position+k[1]*Velocity); //I removed the minus sing to turn the motors correctly
-    Derecha();
-    //Serial.print("The position is "); Serial.print(Position,4); Serial.print("And the Velocity is "); Serial.println(Velocity,8);
-    Serial.println(u,8);
-    }
+    	{
+    	Time_F=millis();
+    	TimeInSeconds=(Time_F-Time_I)*0.001;
+    	Velocity=0.0135/TimeInSeconds;
+    	Time_I=Time_F;
+    	ReadPosition();
+    	DetectPositionWhiteSurfaceMedium();
+    	LastPosition=Position;
+   
+   	 u=(k[0]*Position+k[1]*Velocity); //u=-kx, the control update in each step, from the simple robot model
+    
+    	Derecha();
+    	//Serial.print("The position is "); Serial.print(Position,4); Serial.print("And the Velocity is "); Serial.println(Velocity,8);
+    	Serial.println(u,8);
+    	}
 
     if(Position>=0)
-    {
-    Time_F=millis();
-   // Serial.print("Tiempo inicial "); Serial.print(Time_I);Serial.print("Tiempo final "); Serial.println(Time_F);
-    TimeInSeconds=(Time_F-Time_I)*0.001;
-    Velocity=0.0135/TimeInSeconds;
-    //Serial.println(Velocity);
-    Time_I=Time_F;
-    ReadPosition();
-    DetectPositionWhiteSurfaceMedium();
-    LastPosition=Position;
-    u=(k[0]*Position+k[1]*Velocity); //I removed the minus sing to turn the motors correctly
-    Izquierda();
-    //Serial.print("The position is "); Serial.print(Position,4); Serial.print("And the Velocity is "); Serial.println(Velocity,8);
-    Serial.println(u,8);
-    }
+    	{
+    	Time_F=millis();
+   	// Serial.print("Tiempo inicial "); Serial.print(Time_I);Serial.print("Tiempo final "); Serial.println(Time_F);
+    	TimeInSeconds=(Time_F-Time_I)*0.001;
+    	Velocity=0.0135/TimeInSeconds;
+    	//Serial.println(Velocity);
+    	Time_I=Time_F;
+    	ReadPosition();
+    	DetectPositionWhiteSurfaceMedium();
+    	LastPosition=Position;
+    	u=(k[0]*Position+k[1]*Velocity); //I removed the minus sing to turn the motors correctly
+    	Izquierda();
+    	//Serial.print("The position is "); Serial.print(Position,4); Serial.print("And the Velocity is "); Serial.println(Velocity,8);
+    	Serial.println(u,8);
+    	}
   
  }
   
   if(Position<LastPosition)
   {
- 
    if(Position<0)
     {
        Time_F=millis();
-   // Serial.print("Tiempo inicial "); Serial.print(Time_I);Serial.print("Tiempo final "); Serial.println(Time_F);
-    TimeInSeconds=(Time_F-Time_I)*0.001;
-    Velocity=0.0135/TimeInSeconds;
-    //Serial.println(Velocity);
-    Time_I=Time_F;
-    ReadPosition();
-    DetectPositionWhiteSurfaceMedium();
-    LastPosition=Position;
-    u=(k[0]*Position+k[1]*Velocity); //I removed the minus sing to turn the motors correctly
-    Derecha();
-    //Serial.print("The position is "); Serial.print(Position,4); Serial.print("And the Velocity is "); Serial.println(Velocity,8);
-    Serial.println(u,8);
+   	// Serial.print("Tiempo inicial "); Serial.print(Time_I);Serial.print("Tiempo final "); Serial.println(Time_F);
+    	TimeInSeconds=(Time_F-Time_I)*0.001;
+    	Velocity=0.0135/TimeInSeconds;
+    	//Serial.println(Velocity);
+    	Time_I=Time_F;
+    	ReadPosition();
+    	DetectPositionWhiteSurfaceMedium();
+    	LastPosition=Position;
+    	u=(k[0]*Position+k[1]*Velocity); //I removed the minus sing to turn the motors correctly
+    	Derecha();
+    	//Serial.print("The position is "); Serial.print(Position,4); Serial.print("And the Velocity is "); Serial.println(Velocity,8);
+    	Serial.println(u,8);
     }
 
-    if(Position>=0)
+   if(Position>=0)
     {
-    Time_F=millis();
-   // Serial.print("Tiempo inicial "); Serial.print(Time_I);Serial.print("Tiempo final "); Serial.println(Time_F);
-    TimeInSeconds=(Time_F-Time_I)*0.001;
-    Velocity=0.0135/TimeInSeconds;
-    //Serial.println(Velocity);
-    Time_I=Time_F;
-    ReadPosition();
-    DetectPositionWhiteSurfaceMedium();
-    LastPosition=Position;
-    u=(k[0]*Position+k[1]*Velocity); //I removed the minus sing to turn the motors correctly
-    Izquierda(); //era izquierda
-    //Serial.print("The position is "); Serial.print(Position,4); Serial.print("And the Velocity is "); Serial.println(Velocity,8);
-    Serial.println(u,8);
+   	 Time_F=millis();
+   	// Serial.print("Tiempo inicial "); Serial.print(Time_I);Serial.print("Tiempo final "); Serial.println(Time_F);
+    	TimeInSeconds=(Time_F-Time_I)*0.001;
+    	Velocity=0.0135/TimeInSeconds;
+    	//Serial.println(Velocity);
+    	Time_I=Time_F;
+    	ReadPosition();
+    	DetectPositionWhiteSurfaceMedium();
+    	LastPosition=Position;
+    	u=(k[0]*Position+k[1]*Velocity); //I removed the minus sing to turn the motors correctly
+    	Izquierda(); //era izquierda
+    	//Serial.print("The position is "); Serial.print(Position,4); Serial.print("And the Velocity is "); Serial.println(Velocity,8);
+    	Serial.println(u,8);
     }
   }
  
@@ -281,18 +280,14 @@ void loop()
   
   //PrintSensorLevels();
   //Serial.print("The position is "); Serial.print(Position,4); Serial.print("And the Velocity is "); Serial.println(Velocity,8);
-  //Now, the control in this step will be
 
 }
 
+```
 
+The next code is the building blocks for the functions defined in the main code above
 
-
-
-
-
-
-
+```
 
 void ReadPosition()
 {
@@ -305,6 +300,7 @@ void ReadPosition()
   linea7=analogRead(A6);
   linea8=analogRead(A7);
 }
+
 void DetectPositionWhiteSurface()
 {
   if(linea1<=cut&&linea2>=cut&&linea3>=cut&&linea4>=cut&&linea5>=cut&&linea6>=cut&&linea7>=cut&&linea8>=cut)
@@ -355,7 +351,8 @@ void DetectPositionWhiteSurface()
 
 
 
-  //AL SALIR DE LA LINEA GUARDA EL ULTIMO LUGAR Y DICE SI ES POSICION -4 o 4
+  //Boundaries for the double integrator model, or how to return the central sensor to the line
+
   if(linea1>=cut&&linea2>=cut&&linea3>=cut&&linea4>=cut&&linea5>=cut&&linea6>=cut&&linea7>=cut&&linea8>=cut&&ContadorAuxiliar==-300)
    {
     Position=-4.0*0.0135;
@@ -365,184 +362,21 @@ void DetectPositionWhiteSurface()
     Position=4.0*0.0135;
    }
   
-  
+
 }
 
-
-void DetectPositionWhiteSurfaceMedium()
-{
-  if(linea1<=cut&&linea2>=cut&&linea3>=cut&&linea4>=cut&&linea5>=cut&&linea6>=cut&&linea7>=cut&&linea8>=cut)
-  {
-   Position=-3.5*0.0135;
-   ContadorAuxiliar=-350;
-  
-  }
-  if(linea1<=cut&&linea2<=cut&&linea3>=cut&&linea4>=cut&&linea5>=cut&&linea6>=cut&&linea7>=cut&&linea8>=cut)
-  {
-   Position=-3.0*0.0135;
-   ContadorAuxiliar=-300;
-  
-  }
-  if(linea1>=cut&&linea2<=cut&&linea3>=cut&&linea4>=cut&&linea5>=cut&&linea6>=cut&&linea7>=cut&&linea8>=cut)
-  {
-   Position=-2.5*0.0135;
-   ContadorAuxiliar=-250;
-  }
-  if(linea1>=cut&&linea2<=cut&&linea3<=cut&&linea4>=cut&&linea5>=cut&&linea6>=cut&&linea7>=cut&&linea8>=cut)
-  {
-   Position=-2.0*0.0135;
-   ContadorAuxiliar=-200;
-  }
-  
-  if(linea1>=cut&&linea2>=cut&&linea3<=cut&&linea4>=cut&&linea5>=cut&&linea6>=cut&&linea7>=cut&&linea8>=cut)
-  {
-   Position=-1.5*0.0135;
-   ContadorAuxiliar=-150;
-  }
-  if(linea1>=cut&&linea2>=cut&&linea3<=cut&&linea4<=cut&&linea5>=cut&&linea6>=cut&&linea7>=cut&&linea8>=cut)
-  {
-   Position=-1.0*0.0135;
-   ContadorAuxiliar=-100;
-  }
- 
-  if(linea1>=cut&&linea2>=cut&&linea3>=cut&&linea4<=cut&&linea5>=cut&&linea6>=cut&&linea7>=cut&&linea8>=cut)
-  {
-    Position=-0.5*0.0135;
-    ContadorAuxiliar=-50;
-   
-  }
-  if(linea1>=cut&&linea2>=cut&&linea3>=cut&&linea4<=cut&&linea5<=cut&&linea6>=cut&&linea7>=cut&&linea8>=cut)
-  {
-   Position=0;
-  }
-  if(linea1>=cut&&linea2>=cut&&linea3>=cut&&linea4>=cut&&linea5<=cut&&linea6>=cut&&linea7>=cut&&linea8>=cut)
-  {
-   Position=0.5*0.0135;
-   ContadorAuxiliar=50;
-
-  }
-  if(linea1>=cut&&linea2>=cut&&linea3>=cut&&linea4>=cut&&linea5<=cut&&linea6<=cut&&linea7>=cut&&linea8>=cut)
-  {
-   Position=1.0*0.0135;
-   ContadorAuxiliar=100;
-  }
-  if(linea1>=cut&&linea2>=cut&&linea3>=cut&&linea4>=cut&&linea5>=cut&&linea6<=cut&&linea7>=cut&&linea8>=cut)
-  {
-   Position=1.5*0.0135;
-   ContadorAuxiliar=150;
-
-  }
-  if(linea1>=cut&&linea2>=cut&&linea3>=cut&&linea4>=cut&&linea5>=cut&&linea6<=cut&&linea7<=cut&&linea8>=cut)
-  {
-   Position=2.0*0.0135;
-   ContadorAuxiliar=200;
-  }
-  if(linea1>=cut&&linea2>=cut&&linea3>=cut&&linea4>=cut&&linea5>=cut&&linea6>=cut&&linea7<=cut&&linea8>=cut)
-  {
-   Position=2.5*0.0135;
-   ContadorAuxiliar=250;
-  }
-  if(linea1>=cut&&linea2>=cut&&linea3>=cut&&linea4>=cut&&linea5>=cut&&linea6>=cut&&linea7<=cut&&linea8<=cut)
-  {
-   Position=3.0*0.0135;
-   ContadorAuxiliar=300;  
-  }
-  if(linea1>=cut&&linea2>=cut&&linea3>=cut&&linea4>=cut&&linea5>=cut&&linea6>=cut&&linea7>=cut&&linea8<=cut)
-  {
-   Position=3.5*0.0135;
-   ContadorAuxiliar=350;  
-  }
-
-
-
-  //AL SALIR DE LA LINEA GUARDA EL ULTIMO LUGAR Y DICE SI ES POSICION -4 o 4
-  if(linea1>=cut&&linea2>=cut&&linea3>=cut&&linea4>=cut&&linea5>=cut&&linea6>=cut&&linea7>=cut&&linea8>=cut&&ContadorAuxiliar==-350)
-   {
-    Position=-4.0*0.0135;
-   }
-  if(linea1>=cut&&linea2>=cut&&linea3>=cut&&linea4>=cut&&linea5>=cut&&linea6>=cut&&linea7>=cut&&linea8>=cut&&ContadorAuxiliar==350)
-   {
-    Position=4.0*0.0135;
-   }
-  
-  
-}
-
-void DetectPositionBlackSurface()
-{
-  if(linea1>=cut&&linea2<=cut&&linea3<=cut&&linea4<=cut&&linea5<=cut&&linea6<=cut&&linea7<=cut&&linea8<=cut)
-  {
-   Position=-3.0*0.0135;
-   ContadorAuxiliar=-300;
-   
-   if(linea1<=cut&&linea2<=cut&&linea3<=cut&&linea4<=cut&&linea5<=cut&&linea6<=cut&&linea7<=cut&&linea8<=cut&&ContadorAuxiliar==-300)
-   {
-    Position=-4.0*0.0135;
-   }
-  
-  }
-  if(linea1<=cut&&linea2>=cut&&linea3<=cut&&linea4<=cut&&linea5<=cut&&linea6<=cut&&linea7<=cut&&linea8<=cut)
-  {
-   Position=-2.0*0.0135;
-   ContadorAuxiliar=-200;
-  }
-  if(linea1<=cut&&linea2<=cut&&linea3>=cut&&linea4<=cut&&linea5<=cut&&linea6<=cut&&linea7<=cut&&linea8<=cut)
-  {
-   Position=-1.0*0.0135;
-   ContadorAuxiliar=-100;
-  }
-  if(linea1<=cut&&linea2<=cut&&linea3<=cut&&linea4>=cut&&linea5<=cut&&linea6<=cut&&linea7<=cut&&linea8<=cut)
-  {
-    Position=0.0;
-   
-  }
-  if(linea1<=cut&&linea2<=cut&&linea3<=cut&&linea4<=cut&&linea5>=cut&&linea6<=cut&&linea7<=cut&&linea8<=cut)
-  {
-   Position=0;
-  }
-  if(linea1<=cut&&linea2<=cut&&linea3<=cut&&linea4<=cut&&linea5<=cut&&linea6>=cut&&linea7<=cut&&linea8<=cut)
-  {
-   Position=1.0*0.0135;
-   ContadorAuxiliar=100;
-  }
-  if(linea1<=cut&&linea2<=cut&&linea3<=cut&&linea4<=cut&&linea5<=cut&&linea6<=cut&&linea7>=cut&&linea8<=cut)
-  {
-   Position=2.0*0.0135;
-   ContadorAuxiliar=200;
-  }
-  if(linea1<=cut&&linea2<=cut&&linea3<=cut&&linea4<=cut&&linea5<=cut&&linea6<=cut&&linea7<=cut&&linea8>=cut)
-  {
-   Position=3.0*0.0135;
-   ContadorAuxiliar=300;  
-
-   if(linea1<=cut&&linea2<=cut&&linea3<=cut&&linea4<=cut&&linea5<=cut&&linea6<=cut&&linea7<=cut&&linea8<=cut&&ContadorAuxiliar==300)
-   {
-    Position=4.0*0.0135;
-   }
-   
-  }
-  
-  //AL SALIR DE LA LINEA GUARDA EL ULTIMO LUGAR Y DICE SI ES POSICION -4 o 4
-  if(linea1<=cut&&linea2<=cut&&linea3<=cut&&linea4<=cut&&linea5<=cut&&linea6<=cut&&linea7<=cut&&linea8<=cut&&ContadorAuxiliar==-300)
-   {
-    Position=-4.0*0.0135;
-   }
-  if(linea1<=cut&&linea2<=cut&&linea3<=cut&&linea4<=cut&&linea5<=cut&&linea6<=cut&&linea7<=cut&&linea8>=cut&&ContadorAuxiliar==300)
-   {
-    Position=4.0*0.0135;
-   }
-  
-}
 
 
 void ComputeVelocity()
 {
-  Velocity=((float(Time_F)-float(Time_I)))*.001;
+  Velocity=((float(Time_F)-float(Time_I)))*.001; //Compute of velocity in milimeters (Notice that is a signed value)
 
 
   return Velocity;
 }
-void PrintSensorLevels()
+
+
+void PrintSensorLevels() //Simple function to print sensor values on serial monitor
 {
   Serial.print(linea1); Serial.print("  ");
   Serial.print(linea2); Serial.print("  ");
