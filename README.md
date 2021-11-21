@@ -8,7 +8,7 @@ ___
 1. [Hardware](#Hardware)
 2. [Simulation and obtaining the control constants](#Simulation-and-obtaining-the-control-constants)
 3. [Programming on Arduino](#Programming-on-Arduino)
-4. [Fourth Example](#fourth-examplehttpwwwfourthexamplecom)
+4. [Final prototype](#Final-prototype)
 
 
 ## Hardware
@@ -449,4 +449,5 @@ void Izquierda()
 
 ```
 
-## FOur
+## Final prototype
+Section for some pictures of the completed prototype
