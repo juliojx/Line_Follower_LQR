@@ -66,7 +66,9 @@ u=-(float(1/r))*np.transpose(b).dot(x) #Getting u
 
 t=np.linspace(ti,tf,n)
 y=np.sin(t)
-
+```
+So, we can perform a simple simulation with Euler's method
+```
 #Using Euler method to show the response, as we do not have a closed trayectory is not necesary using an upper grade method
 x1= np.zeros([n])
 x1[0]=x1_0
@@ -90,7 +92,8 @@ plt.plot(t, x1,'g')
 plt.show()
 
 ```
-And the response will be
+And the response (in green) of the prototype versus the ideal trayectory (in red) will be
+![Alt text](images/SimulationIdeal.png?raw=true "Simulation of the response")
 
 
 ## Programming on Arduino
