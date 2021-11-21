@@ -7,7 +7,7 @@ ___
 # Table of Contents
 1. [Hardware](#Hardware)
 2. [Simulation and obtaining the control constants](#Simulation-and-obtaining-the-control-constants)
-3. [Third Example](#third-example)
+3. [Programming on Arduino](#Programming-on-Arduino)
 4. [Fourth Example](#fourth-examplehttpwwwfourthexamplecom)
 
 
@@ -97,6 +97,16 @@ And the response (in green) of the prototype versus the ideal trayectory (in red
 
 
 ## Programming on Arduino
+
+The pseudocodes (In spanish) of each one of the control blocks are presented below
+![Alt text](images/PseudicodigoTraccion.png?raw=true "Traction part 1")
+![Alt text](images/PseudicodigoTraccion2.png?raw=true "Traction part 2")
+![Alt text](images/PseudocodigoBotonPulsador.png?raw=true "Push Button routine")
+![Alt text](images/PseudocodigoDeteccionLinea.png?raw=true "Line detection program")
+![Alt text](images/PseudocodigoSelector.png?raw=true "Routine selector program")
+![Alt text](images/PseudocodigoSelector2.png?raw=true "Routine selector program part 2")
+![Alt text](images/PseudocodigoUmbral.png?raw=true "Boundaries setting program")
+![Alt text](images/PseudocodigoPrincipal.png?raw=true "Main program")
 
 
 ## FOur
