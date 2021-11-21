@@ -108,7 +108,511 @@ The pseudocodes (In spanish) of each one of the control blocks are presented bel
 ![Alt text](images/PseudocodigoUmbral.png?raw=true "Boundaries setting program")
 ![Alt text](images/PseudocodigoPrincipal.png?raw=true "Main program")
 
-So, the implementation in Arduino (some filling code is not presented) is presented below:
+So, the implementation in Arduino (C/C++ language) is presented below:
 
+
+```
+//motor A connected between A01 and A02
+//motor B connected between B01 and B02
+
+int VCC=7;
+int state=1;
+//Variables a utilizar para el botón pulsador
+const int pulsador=2;
+int contadorBoton=0;
+int pulsos=0;
+int EstadoPasadoPulsador=0;
+int EstadoActualPulsador=0;
+unsigned long ActualMillis=0;
+unsigned long ActualMillis2=0;
+unsigned long UltimoMillis=0;
+int linea1=A0;
+int linea2=A1;
+int linea3=A2;
+int linea4=A3;
+int linea5=A4;
+int linea6=A5;
+int linea7=A6;
+int linea8=A7;
+int cut=550;
+float Position=0;
+int ContadorAuxiliar=0;
+float Time_I;
+float Time_F;
+float LastPosition;
+float Velocity;
+int InitialCounter=0;
+float TimeInSeconds;
+
+//************Aqui se configuran los motores***************************************************************
+
+
+int STBY = 10; //standby
+
+//Motor A
+int PWMA = 3; //Speed control 
+int AIN1 = 9; //Direction
+int AIN2 = 8; //Direction
+
+//Motor B
+int PWMB = 5; //Speed control
+int BIN1 = 11; //Direction
+int BIN2 = 12; //Direction
+
+//*********************************************************************
+
+//***************Aqui se configuran los parametros del control LQR***************************************
+
+float k[]={50.729833,0}; //Estos valores los obtenemos de la simulacion hecha en python
+
+float x[]={0,0};
+float u;
+//******************************************************************************************************
+
+
+
+
+
+
+void setup()
+{
+  Serial.begin(9600);
+  pinMode(A0,INPUT);
+  pinMode(A1,INPUT);
+  pinMode(A2,INPUT);
+  pinMode(A3,INPUT);
+  pinMode(A4,INPUT);
+  pinMode(A5,INPUT);
+  pinMode(A6,INPUT);
+  pinMode(A7,INPUT);
+    
+}
+void loop()
+{
+  if(InitialCounter==0)
+  {
+   Time_I=millis();
+   ReadPosition();
+   DetectPositionWhiteSurfaceMedium();
+   LastPosition=Position;
+   InitialCounter=1;
+  } 
+  
+  ReadPosition();
+  DetectPositionWhiteSurfaceMedium();
+  
+  if(Position>LastPosition)
+  {
+    if(Position<0)
+    {
+       Time_F=millis();
+   // Serial.print("Tiempo inicial "); Serial.print(Time_I);Serial.print("Tiempo final "); Serial.println(Time_F);
+    TimeInSeconds=(Time_F-Time_I)*0.001;
+    Velocity=0.0135/TimeInSeconds;
+    //Serial.println(Velocity);
+    Time_I=Time_F;
+    ReadPosition();
+    DetectPositionWhiteSurfaceMedium();
+    LastPosition=Position;
+    u=(k[0]*Position+k[1]*Velocity); //I removed the minus sing to turn the motors correctly
+    Derecha();
+    //Serial.print("The position is "); Serial.print(Position,4); Serial.print("And the Velocity is "); Serial.println(Velocity,8);
+    Serial.println(u,8);
+    }
+
+    if(Position>=0)
+    {
+    Time_F=millis();
+   // Serial.print("Tiempo inicial "); Serial.print(Time_I);Serial.print("Tiempo final "); Serial.println(Time_F);
+    TimeInSeconds=(Time_F-Time_I)*0.001;
+    Velocity=0.0135/TimeInSeconds;
+    //Serial.println(Velocity);
+    Time_I=Time_F;
+    ReadPosition();
+    DetectPositionWhiteSurfaceMedium();
+    LastPosition=Position;
+    u=(k[0]*Position+k[1]*Velocity); //I removed the minus sing to turn the motors correctly
+    Izquierda();
+    //Serial.print("The position is "); Serial.print(Position,4); Serial.print("And the Velocity is "); Serial.println(Velocity,8);
+    Serial.println(u,8);
+    }
+  
+ }
+  
+  if(Position<LastPosition)
+  {
+ 
+   if(Position<0)
+    {
+       Time_F=millis();
+   // Serial.print("Tiempo inicial "); Serial.print(Time_I);Serial.print("Tiempo final "); Serial.println(Time_F);
+    TimeInSeconds=(Time_F-Time_I)*0.001;
+    Velocity=0.0135/TimeInSeconds;
+    //Serial.println(Velocity);
+    Time_I=Time_F;
+    ReadPosition();
+    DetectPositionWhiteSurfaceMedium();
+    LastPosition=Position;
+    u=(k[0]*Position+k[1]*Velocity); //I removed the minus sing to turn the motors correctly
+    Derecha();
+    //Serial.print("The position is "); Serial.print(Position,4); Serial.print("And the Velocity is "); Serial.println(Velocity,8);
+    Serial.println(u,8);
+    }
+
+    if(Position>=0)
+    {
+    Time_F=millis();
+   // Serial.print("Tiempo inicial "); Serial.print(Time_I);Serial.print("Tiempo final "); Serial.println(Time_F);
+    TimeInSeconds=(Time_F-Time_I)*0.001;
+    Velocity=0.0135/TimeInSeconds;
+    //Serial.println(Velocity);
+    Time_I=Time_F;
+    ReadPosition();
+    DetectPositionWhiteSurfaceMedium();
+    LastPosition=Position;
+    u=(k[0]*Position+k[1]*Velocity); //I removed the minus sing to turn the motors correctly
+    Izquierda(); //era izquierda
+    //Serial.print("The position is "); Serial.print(Position,4); Serial.print("And the Velocity is "); Serial.println(Velocity,8);
+    Serial.println(u,8);
+    }
+  }
+ 
+  
+  
+  //PrintSensorLevels();
+  //Serial.print("The position is "); Serial.print(Position,4); Serial.print("And the Velocity is "); Serial.println(Velocity,8);
+  //Now, the control in this step will be
+
+}
+
+
+
+
+
+
+
+
+
+
+void ReadPosition()
+{
+  linea1=analogRead(A0);
+  linea2=analogRead(A1);
+  linea3=analogRead(A2);
+  linea4=analogRead(A3);
+  linea5=analogRead(A4);
+  linea6=analogRead(A5);
+  linea7=analogRead(A6);
+  linea8=analogRead(A7);
+}
+void DetectPositionWhiteSurface()
+{
+  if(linea1<=cut&&linea2>=cut&&linea3>=cut&&linea4>=cut&&linea5>=cut&&linea6>=cut&&linea7>=cut&&linea8>=cut)
+  {
+   Position=-3.0*0.0135;
+   ContadorAuxiliar=-300;
+  
+  }
+  
+  if(linea1>=cut&&linea2<=cut&&linea3>=cut&&linea4>=cut&&linea5>=cut&&linea6>=cut&&linea7>=cut&&linea8>=cut)
+  {
+   Position=-2.0*0.0135;
+   ContadorAuxiliar=-200;
+  }
+  if(linea1>=cut&&linea2>=cut&&linea3<=cut&&linea4>=cut&&linea5>=cut&&linea6>=cut&&linea7>=cut&&linea8>=cut)
+  {
+   Position=-1.0*0.0135;
+   ContadorAuxiliar=-100;
+  }
+  if(linea1>=cut&&linea2>=cut&&linea3>=cut&&linea4<=cut&&linea5>=cut&&linea6>=cut&&linea7>=cut&&linea8>=cut)
+  {
+    Position=-0.5;
+   
+  }
+  if(linea1>=cut&&linea2>=cut&&linea3>=cut&&linea4>=cut&&linea5<=cut&&linea6>=cut&&linea7>=cut&&linea8>=cut)
+  {
+   Position=0.5;
+  }
+   if(linea1>=cut&&linea2>=cut&&linea3>=cut&&linea4<=cut&&linea5<=cut&&linea6>=cut&&linea7>=cut&&linea8>=cut)
+  {
+   Position=0;
+  }
+  if(linea1>=cut&&linea2>=cut&&linea3>=cut&&linea4>=cut&&linea5>=cut&&linea6<=cut&&linea7>=cut&&linea8>=cut)
+  {
+   Position=1.0*0.0135;
+   ContadorAuxiliar=100;
+  }
+  if(linea1>=cut&&linea2>=cut&&linea3>=cut&&linea4>=cut&&linea5>=cut&&linea6>=cut&&linea7<=cut&&linea8>=cut)
+  {
+   Position=2.0*0.0135;
+   ContadorAuxiliar=200;
+  }
+  if(linea1>=cut&&linea2>=cut&&linea3>=cut&&linea4>=cut&&linea5>=cut&&linea6>=cut&&linea7>=cut&&linea8<=cut)
+  {
+   Position=3.0*0.0135;
+   ContadorAuxiliar=300;  
+  }
+
+
+
+  //AL SALIR DE LA LINEA GUARDA EL ULTIMO LUGAR Y DICE SI ES POSICION -4 o 4
+  if(linea1>=cut&&linea2>=cut&&linea3>=cut&&linea4>=cut&&linea5>=cut&&linea6>=cut&&linea7>=cut&&linea8>=cut&&ContadorAuxiliar==-300)
+   {
+    Position=-4.0*0.0135;
+   }
+  if(linea1>=cut&&linea2>=cut&&linea3>=cut&&linea4>=cut&&linea5>=cut&&linea6>=cut&&linea7>=cut&&linea8>=cut&&ContadorAuxiliar==300)
+   {
+    Position=4.0*0.0135;
+   }
+  
+  
+}
+
+
+void DetectPositionWhiteSurfaceMedium()
+{
+  if(linea1<=cut&&linea2>=cut&&linea3>=cut&&linea4>=cut&&linea5>=cut&&linea6>=cut&&linea7>=cut&&linea8>=cut)
+  {
+   Position=-3.5*0.0135;
+   ContadorAuxiliar=-350;
+  
+  }
+  if(linea1<=cut&&linea2<=cut&&linea3>=cut&&linea4>=cut&&linea5>=cut&&linea6>=cut&&linea7>=cut&&linea8>=cut)
+  {
+   Position=-3.0*0.0135;
+   ContadorAuxiliar=-300;
+  
+  }
+  if(linea1>=cut&&linea2<=cut&&linea3>=cut&&linea4>=cut&&linea5>=cut&&linea6>=cut&&linea7>=cut&&linea8>=cut)
+  {
+   Position=-2.5*0.0135;
+   ContadorAuxiliar=-250;
+  }
+  if(linea1>=cut&&linea2<=cut&&linea3<=cut&&linea4>=cut&&linea5>=cut&&linea6>=cut&&linea7>=cut&&linea8>=cut)
+  {
+   Position=-2.0*0.0135;
+   ContadorAuxiliar=-200;
+  }
+  
+  if(linea1>=cut&&linea2>=cut&&linea3<=cut&&linea4>=cut&&linea5>=cut&&linea6>=cut&&linea7>=cut&&linea8>=cut)
+  {
+   Position=-1.5*0.0135;
+   ContadorAuxiliar=-150;
+  }
+  if(linea1>=cut&&linea2>=cut&&linea3<=cut&&linea4<=cut&&linea5>=cut&&linea6>=cut&&linea7>=cut&&linea8>=cut)
+  {
+   Position=-1.0*0.0135;
+   ContadorAuxiliar=-100;
+  }
+ 
+  if(linea1>=cut&&linea2>=cut&&linea3>=cut&&linea4<=cut&&linea5>=cut&&linea6>=cut&&linea7>=cut&&linea8>=cut)
+  {
+    Position=-0.5*0.0135;
+    ContadorAuxiliar=-50;
+   
+  }
+  if(linea1>=cut&&linea2>=cut&&linea3>=cut&&linea4<=cut&&linea5<=cut&&linea6>=cut&&linea7>=cut&&linea8>=cut)
+  {
+   Position=0;
+  }
+  if(linea1>=cut&&linea2>=cut&&linea3>=cut&&linea4>=cut&&linea5<=cut&&linea6>=cut&&linea7>=cut&&linea8>=cut)
+  {
+   Position=0.5*0.0135;
+   ContadorAuxiliar=50;
+
+  }
+  if(linea1>=cut&&linea2>=cut&&linea3>=cut&&linea4>=cut&&linea5<=cut&&linea6<=cut&&linea7>=cut&&linea8>=cut)
+  {
+   Position=1.0*0.0135;
+   ContadorAuxiliar=100;
+  }
+  if(linea1>=cut&&linea2>=cut&&linea3>=cut&&linea4>=cut&&linea5>=cut&&linea6<=cut&&linea7>=cut&&linea8>=cut)
+  {
+   Position=1.5*0.0135;
+   ContadorAuxiliar=150;
+
+  }
+  if(linea1>=cut&&linea2>=cut&&linea3>=cut&&linea4>=cut&&linea5>=cut&&linea6<=cut&&linea7<=cut&&linea8>=cut)
+  {
+   Position=2.0*0.0135;
+   ContadorAuxiliar=200;
+  }
+  if(linea1>=cut&&linea2>=cut&&linea3>=cut&&linea4>=cut&&linea5>=cut&&linea6>=cut&&linea7<=cut&&linea8>=cut)
+  {
+   Position=2.5*0.0135;
+   ContadorAuxiliar=250;
+  }
+  if(linea1>=cut&&linea2>=cut&&linea3>=cut&&linea4>=cut&&linea5>=cut&&linea6>=cut&&linea7<=cut&&linea8<=cut)
+  {
+   Position=3.0*0.0135;
+   ContadorAuxiliar=300;  
+  }
+  if(linea1>=cut&&linea2>=cut&&linea3>=cut&&linea4>=cut&&linea5>=cut&&linea6>=cut&&linea7>=cut&&linea8<=cut)
+  {
+   Position=3.5*0.0135;
+   ContadorAuxiliar=350;  
+  }
+
+
+
+  //AL SALIR DE LA LINEA GUARDA EL ULTIMO LUGAR Y DICE SI ES POSICION -4 o 4
+  if(linea1>=cut&&linea2>=cut&&linea3>=cut&&linea4>=cut&&linea5>=cut&&linea6>=cut&&linea7>=cut&&linea8>=cut&&ContadorAuxiliar==-350)
+   {
+    Position=-4.0*0.0135;
+   }
+  if(linea1>=cut&&linea2>=cut&&linea3>=cut&&linea4>=cut&&linea5>=cut&&linea6>=cut&&linea7>=cut&&linea8>=cut&&ContadorAuxiliar==350)
+   {
+    Position=4.0*0.0135;
+   }
+  
+  
+}
+
+void DetectPositionBlackSurface()
+{
+  if(linea1>=cut&&linea2<=cut&&linea3<=cut&&linea4<=cut&&linea5<=cut&&linea6<=cut&&linea7<=cut&&linea8<=cut)
+  {
+   Position=-3.0*0.0135;
+   ContadorAuxiliar=-300;
+   
+   if(linea1<=cut&&linea2<=cut&&linea3<=cut&&linea4<=cut&&linea5<=cut&&linea6<=cut&&linea7<=cut&&linea8<=cut&&ContadorAuxiliar==-300)
+   {
+    Position=-4.0*0.0135;
+   }
+  
+  }
+  if(linea1<=cut&&linea2>=cut&&linea3<=cut&&linea4<=cut&&linea5<=cut&&linea6<=cut&&linea7<=cut&&linea8<=cut)
+  {
+   Position=-2.0*0.0135;
+   ContadorAuxiliar=-200;
+  }
+  if(linea1<=cut&&linea2<=cut&&linea3>=cut&&linea4<=cut&&linea5<=cut&&linea6<=cut&&linea7<=cut&&linea8<=cut)
+  {
+   Position=-1.0*0.0135;
+   ContadorAuxiliar=-100;
+  }
+  if(linea1<=cut&&linea2<=cut&&linea3<=cut&&linea4>=cut&&linea5<=cut&&linea6<=cut&&linea7<=cut&&linea8<=cut)
+  {
+    Position=0.0;
+   
+  }
+  if(linea1<=cut&&linea2<=cut&&linea3<=cut&&linea4<=cut&&linea5>=cut&&linea6<=cut&&linea7<=cut&&linea8<=cut)
+  {
+   Position=0;
+  }
+  if(linea1<=cut&&linea2<=cut&&linea3<=cut&&linea4<=cut&&linea5<=cut&&linea6>=cut&&linea7<=cut&&linea8<=cut)
+  {
+   Position=1.0*0.0135;
+   ContadorAuxiliar=100;
+  }
+  if(linea1<=cut&&linea2<=cut&&linea3<=cut&&linea4<=cut&&linea5<=cut&&linea6<=cut&&linea7>=cut&&linea8<=cut)
+  {
+   Position=2.0*0.0135;
+   ContadorAuxiliar=200;
+  }
+  if(linea1<=cut&&linea2<=cut&&linea3<=cut&&linea4<=cut&&linea5<=cut&&linea6<=cut&&linea7<=cut&&linea8>=cut)
+  {
+   Position=3.0*0.0135;
+   ContadorAuxiliar=300;  
+
+   if(linea1<=cut&&linea2<=cut&&linea3<=cut&&linea4<=cut&&linea5<=cut&&linea6<=cut&&linea7<=cut&&linea8<=cut&&ContadorAuxiliar==300)
+   {
+    Position=4.0*0.0135;
+   }
+   
+  }
+  
+  //AL SALIR DE LA LINEA GUARDA EL ULTIMO LUGAR Y DICE SI ES POSICION -4 o 4
+  if(linea1<=cut&&linea2<=cut&&linea3<=cut&&linea4<=cut&&linea5<=cut&&linea6<=cut&&linea7<=cut&&linea8<=cut&&ContadorAuxiliar==-300)
+   {
+    Position=-4.0*0.0135;
+   }
+  if(linea1<=cut&&linea2<=cut&&linea3<=cut&&linea4<=cut&&linea5<=cut&&linea6<=cut&&linea7<=cut&&linea8>=cut&&ContadorAuxiliar==300)
+   {
+    Position=4.0*0.0135;
+   }
+  
+}
+
+
+void ComputeVelocity()
+{
+  Velocity=((float(Time_F)-float(Time_I)))*.001;
+
+
+  return Velocity;
+}
+void PrintSensorLevels()
+{
+  Serial.print(linea1); Serial.print("  ");
+  Serial.print(linea2); Serial.print("  ");
+  Serial.print(linea3); Serial.print("  ");
+  Serial.print(linea4); Serial.print("  ");
+  Serial.print(linea5); Serial.print("  ");
+  Serial.print(linea6); Serial.print("  ");
+  Serial.print(linea7); Serial.print("  ");
+  Serial.print(linea8); Serial.println("  ");
+  
+  }
+
+
+
+
+
+
+void move(int motor, int speed, int direction){
+//Move specific motor at speed and direction
+//motor: 0 for B 1 for A
+//speed: 0 is off, and 255 is full speed
+//direction: 0 clockwise, 1 counter-clockwise
+
+  digitalWrite(STBY, HIGH); //disable standby
+
+  boolean inPin1 = LOW;
+  boolean inPin2 = HIGH;
+
+  if(direction == 1){
+    inPin1 = HIGH;
+    inPin2 = LOW;
+  }
+
+  if(motor == 1){
+    digitalWrite(AIN1, inPin1);
+    digitalWrite(AIN2, inPin2);
+    analogWrite(PWMA, speed);
+  }else{
+    digitalWrite(BIN1, inPin1);
+    digitalWrite(BIN2, inPin2);
+    analogWrite(PWMB, speed);
+  }
+
+}
+
+void stop(){
+//enable standby  
+  digitalWrite(STBY, LOW); 
+}
+
+void Recto()
+{
+  move(1, 200, 0); //motor 1, full speed, atrás
+  move(2, 200, 1); //motor 2, full speed, adelante
+
+}
+void Derecha()
+{
+  move(1, 128, 0); //motor 1, full speed, atrás
+  move(2, 128.0+46.0*u, 1); //motor 2, full speed, adelante
+
+}
+void Izquierda()
+{
+  move(1, 128.0-u*46.0, 0); //motor 1, full speed, atrás
+  move(2, 128, 1); //motor 2, full speed, adelante
+
+}
+
+
+```
 
 ## FOur
