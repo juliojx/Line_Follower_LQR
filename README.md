@@ -35,9 +35,62 @@ and define the constant for the control by feedback
 
 A comprehensive explanation of the theory can be found in  http://www.cds.caltech.edu/~murray/books/AM08/pdf/obc09-obc09_03Mar09.pdf or any other classical control theory book.
 
+We can solve the equation in Matlab or Python.
 
+Python solution
 ```
-codigo;
+import numpy as np
+import scipy.linalg as linalg
+import matplotlib.pyplot as plt
+
+
+
+a=np.array([[0,1],[0,0]])
+b=np.array([[0],[1]])
+q=np.array([[1.5,0],[0,0.5]]) #Weights of Q matrix
+r=np.array([[.5]])          #Parameter that weighs ease of rotation, the more distance between wheels, the more weight.
+C=np.array([1,0])
+D=[0]
+
+ti=0
+tf=20
+n=500
+dt=float(tf-ti)/n
+x1_0=0 #Initial conditions
+x2_0=0 #Initial conditions
+SIN_0=0
+x=linalg.solve_continuous_are(a, b, q, r) #Solving Ricatti Equations for our previously set model
+#print x
+
+u=-(float(1/r))*np.transpose(b).dot(x) #Getting u
+
+t=np.linspace(ti,tf,n)
+y=np.sin(t)
+
+#Using Euler method to show the response, as we do not have a closed trayectory is not necesary using an upper grade method
+x1= np.zeros([n])
+x1[0]=x1_0
+x2=np.zeros([n])
+x2[0]=x2_0
+SIN=np.zeros([n])
+SIN[0]=SIN_0
+for i in range(1,n): #Estoy usando metodo de Euler
+	SIN[i]=np.sin(t[i-1])
+	x1[i]=x1[i-1]+(x2[i-1])*dt+SIN[i]
+	x2[i]=x2[i-1]-(x1[i-1]*np.take(x,0))*dt #-kx1
+	print np.take(x,0)
+#for i in range(1,n):
+	
+#	print(t[i],x1[i])
+
+plt.figure()
+plt.subplot(2,2,1)
+plt.plot(t, SIN,'r')
+
+plt.subplot(2,2,1)
+plt.plot(t, x1,'g')
+plt.show()
+
 ```
 
 ## Programming on Arduino
