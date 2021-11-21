@@ -74,14 +74,12 @@ x2=np.zeros([n])
 x2[0]=x2_0
 SIN=np.zeros([n])
 SIN[0]=SIN_0
-for i in range(1,n): #Estoy usando metodo de Euler
+for i in range(1,n):
 	SIN[i]=np.sin(t[i-1])
 	x1[i]=x1[i-1]+(x2[i-1])*dt+SIN[i]
 	x2[i]=x2[i-1]-(x1[i-1]*np.take(x,0))*dt #-kx1
 	print np.take(x,0)
 #for i in range(1,n):
-	
-#	print(t[i],x1[i])
 
 plt.figure()
 plt.subplot(2,2,1)
@@ -92,6 +90,8 @@ plt.plot(t, x1,'g')
 plt.show()
 
 ```
+And the response will be
+
 
 ## Programming on Arduino
 
