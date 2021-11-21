@@ -108,5 +108,7 @@ The pseudocodes (In spanish) of each one of the control blocks are presented bel
 ![Alt text](images/PseudocodigoUmbral.png?raw=true "Boundaries setting program")
 ![Alt text](images/PseudocodigoPrincipal.png?raw=true "Main program")
 
+So, the implementation in Arduino (some filling code is not presented) is presented below:
+
 
 ## FOur
